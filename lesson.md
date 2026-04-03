@@ -1,196 +1,298 @@
-# 🎓 Lesson 1.2: Intro to Databases — Instructor Guide
+# 📚 Lesson 1.2: Data Modeling & Schema Design
 
 ## Session Overview
 
-| Item | Detail |
-|------|--------|
+| | |
+|---|---|
 | **Duration** | 3 hours |
-| **Format** | Flipped Classroom + Problem-Based Learning |
-| **Prerequisites** | Pre-class reading on database types, keys, and normalisation; dbdiagram.io account |
-| **Tools** | Browser + [dbdiagram.io](https://dbdiagram.io) — no installation required |
+| **Format** | Flipped Classroom + Code-Along |
+| **Tools** | [dbdiagram.io](https://dbdiagram.io/d) |
 
-### Agenda
+## Agenda
 
-| Time | Section | Focus |
-|------|---------|-------|
-| 0:00 – 0:55 | Part 1: The Data Landscape | Relational vs. NoSQL vs. Vector databases |
-| 0:55 – 1:00 | Break | — |
-| 1:00 – 1:55 | Part 2: Building the Blueprint | Primary Keys, Foreign Keys, ERD design |
-| 1:55 – 2:00 | Break | — |
-| 2:00 – 2:55 | Part 3: Organising Data | Normalisation — 1NF, 2NF, 3NF |
-| 2:55 – 3:00 | Wrap-Up | Key Takeaways & Post-Class Assignment Briefing |
-
----
-
-## 🏃 Part 1: The Data Landscape (55 min)
-
-### 🎯 Learning Objective
-Analyse the differences between Relational, NoSQL, and Vector databases and select the appropriate type for a given business use case.
-
-### 📖 Theory Recap (10 min)
-
-**Analogy:** Think of three types of storage systems:
-- **Relational (SQL):** A filing cabinet — rigid drawers, labelled folders, fixed forms. Perfect for structured, consistent data.
-- **NoSQL:** A bag of zip-lock bags — flexible, can hold anything, easy to add new types. Great for fast-changing or varied data.
-- **Vector:** A library organised by topic similarity, not alphabetical order. Built for semantic search and AI applications.
-
-| Database Type | Best For | Examples |
-|---------------|---------|----------|
-| **Relational (SQL)** | Financial records, inventory, accounts | PostgreSQL, MySQL, DuckDB |
-| **NoSQL** | Social feeds, chat logs, IoT data | MongoDB, Redis, Firestore |
-| **Vector** | Image search, LLM memory, recommendations | Pinecone, pgvector, Weaviate |
-
-Common SQL data types: `INT`, `VARCHAR`, `TEXT`, `DATE`, `BOOLEAN`, `DECIMAL`
-
-### 🛠️ Hands-On Activity: "The Sorting Game" (35 min)
-
-**Scenario:** A startup is building a super-app with multiple features. Each feature team is arguing over which database to use.
-
-**Task:** For each business feature below, vote on which database type fits best and explain why:
-
-| Feature | Best DB Type | Why? |
-|---------|-------------|------|
-| User payment history | Relational | Structured, needs ACID compliance |
-| User-uploaded photos | NoSQL or object store | Unstructured; schema-free |
-| "Find similar products" search | Vector | Semantic similarity matching |
-| Live chat messages | NoSQL | High velocity, flexible schema |
-| Monthly financial reports | Relational | Joins, aggregations, integrity |
-
-**Discussion Questions:**
-- "Could you build the entire app with just one database type? What would break?"
-- "Why would a bank never use a NoSQL database for transaction records?"
-
-### 💬 Q&A & Reflection (10 min)
-
-- **Common Misconception:** "SQL databases are old and being replaced by NoSQL." → SQL databases handle the vast majority of the world's structured business data. NoSQL and Vector DBs are additive, not replacements.
-- **Business Case:** Uber uses a combination: PostgreSQL for ride billing (Relational), Cassandra for real-time location tracking (NoSQL), and vector databases for driver-rider matching algorithms.
+| Time | Part | Topic |
+|------|------|-------|
+| 0:00 – 0:50 | Part 1 | The Data Landscape — Relational vs. NoSQL vs. Vector |
+| 0:50 – 1:00 | Break | — |
+| 1:00 – 1:50 | Part 2 | Blueprinting — ERD & Keys (PK/FK) |
+| 1:50 – 2:00 | Break | — |
+| 2:00 – 2:50 | Part 3 | Normalization — 1NF, 2NF, 3NF |
+| 2:50 – 3:00 | Wrap-Up | Q&A, Next Steps |
 
 ---
 
-## 🏃 Part 2: Building the Blueprint (55 min)
+## 🏃 Part 1: The Data Landscape (50 min)
 
-### 🎯 Learning Objective
-Apply Primary Keys and Foreign Keys to design an Entity-Relationship Diagram (ERD) using DBML syntax.
+### 🎯 Learning Objectives
+Analyse the differences between Relational, NoSQL, and Vector databases to select the correct tool for a business problem.
 
-### 📖 Theory Recap (10 min)
+### Concept Overview
 
-**Analogy:**
-- **Primary Key (PK):** Your national ID number — unique, non-null, cannot change.
-- **Foreign Key (FK):** A reference to someone else's ID — it proves the relationship exists but lives in the other table.
+Since you know Python, you know how to store data in variables. But what happens when you turn the computer off? The data is gone.
 
-Key rules:
-- Every table must have exactly one PK.
-- FKs reference a PK in another table.
-- Deleting a parent record with dependent child records causes a **referential integrity error** unless handled.
+To persist data, we need a Database. But not all data is created equal — you wouldn't use a spreadsheet to store a 4K movie, and you wouldn't use a video player to calculate your taxes.
 
-DBML syntax for relationships: `Ref: child_table.fk_column > parent_table.pk_column`
+**The Three Pillars:**
 
-### 🛠️ Code-Along: "Car Insurance Schema" (20 min)
+| Type | The "Vibe" | Best For... | Tech Examples |
+|------|-----------|-----------|---------------|
+| **Relational (SQL)** | **Structured & Rigid.** Think of it like a bank vault — highly organized, strict rules. | Financials, Inventories, User Accounts | PostgreSQL, MySQL, Snowflake |
+| **NoSQL** | **Flexible & Fast.** Think of it like a messy desk — throw documents anywhere, find them fast. | Social Media feeds, Chat logs, IoT sensor data | MongoDB, Cassandra |
+| **Vector** | **Semantic & AI.** Think of it like a brain association game — "King" is close to "Queen". | Image search, LLM Memory, Recommendation engines | Pinecone, Weaviate |
 
-Walk students through building this schema in dbdiagram.io:
+**SQL Data Types:**
+
+| Data Type | Description |
+|-----------|-------------|
+| `INT` | Integer, whole number |
+| `VARCHAR` | Variable length character |
+| `TEXT` | Long text |
+| `DATE` | Date |
+| `TIME` | Time |
+| `DATETIME` | Date and time |
+| `BOOLEAN` | True or false |
+
+### 🛠️ Activity 1: The Sorting Game (10 min)
+
+"I am the CEO of a new Startup. I have 4 features I need to build. Tell me which database type I should use and WHY."
+
+1. **User Profile Pictures:**
+   <details>
+   <summary>Answer</summary>
+   NoSQL/Object Store for the image binary, or SQL for the file path.
+   </details>
+
+2. **Payment Processing:**
+   <details>
+   <summary>Answer</summary>
+   SQL. We need ACID (Atomicity, Consistency, Isolation, and Durability) compliance/Transactions.
+   </details>
+
+3. **"Find me songs that sound like Jazz":**
+   <details>
+   <summary>Answer</summary>
+   Vector Database
+   </details>
+
+4. **A live chat for a video game:**
+   <details>
+   <summary>Answer</summary>
+   NoSQL. High volume, simple structure.
+   </details>
+
+---
+
+## 🏃 Part 2: Building the Blueprint — ERD (50 min)
+
+### 🎯 Learning Objectives
+Apply the concepts of Primary Keys and Foreign Keys to create a logical Entity-Relationship Diagram (ERD) using DBML.
+
+### Concept Overview
+
+Before we write SQL queries, we need a map. An Architect draws a blueprint before the construction crew lays bricks. An **ERD (Entity Relationship Diagram)** is our blueprint.
+
+The glue that holds this blueprint together is the **ID**.
+
+**The Keys:**
+
+1. **Primary Key (PK):** The unique NRIC number of a row.
+   - *Rule:* It creates identity. If two rows have the same PK, the database throws an error.
+
+2. **Foreign Key (FK):** The reference pointing to someone else's PK.
+   - *Rule:* It creates relationships — "I belong to that person over there."
+
+### 🛠️ Activity 2.1: Code-Along — Car Insurance Schema (15 min)
+
+Open [dbdiagram.io](https://dbdiagram.io/d) and paste the following code. Read the comments as you go.
 
 ```dbml
+// --- 1. Define the Customer ---
+// A 'Table' represents a noun (a person, place, or thing).
 Table customers {
-  id INT [pk, increment]
-  name VARCHAR
-  email VARCHAR [unique]
-  created_at DATETIME
+  id int [pk, increment] // PRIMARY KEY: The unique ID for every customer
+  name varchar           // Their full name
+  address varchar        // Where they live
+  phone varchar          // Contact info
+  email varchar          // Contact info
 }
 
+// --- 2. Define the Car ---
+// A car cannot exist in our system without an owner.
 Table cars {
-  id INT [pk, increment]
-  customer_id INT [ref: > customers.id]
-  make VARCHAR
-  model VARCHAR
-  year INT
+  id int [pk, increment]
+  make varchar      // e.g., Toyota
+  model varchar     // e.g., Corolla
+  year int
+  car_plate varchar
+
+  // FOREIGN KEY: This is the critical link.
+  // It holds the ID of the customer who owns this car.
+  customer_id int
 }
 
-Table accidents {
-  id INT [pk, increment]
-  car_id INT [ref: > cars.id]
-  date DATE
-  claim_amount DECIMAL
-}
+// --- 3. Define the Link (Relationship) ---
+// The '>' symbol translates to "One-to-Many".
+// Read as: "One Customer can have Many Cars"
+Ref: cars.customer_id > customers.id
+
+
+// --- 🟢 CHALLENGE ---
+// Task: Add an 'accidents' table below.
+// Requirements:
+// 1. Accidents have a date, location, and description.
+// 2. An accident happens to a specific CAR.
+// 3. Link the accident to the car.
 ```
 
-**Discussion:** "How many accidents can one car have? How many cars can one customer have? Draw the cardinality."
+<details>
+<summary>Click here to view solution</summary>
 
-### 🛠️ Workshop: "The School System ERD" (25 min)
+```dbml
+Table accidents {
+  id int [pk, increment]
+  date datetime
+  location varchar
+  description text
 
-**Task:** In dbdiagram.io, build a schema where:
-- Students belong to exactly one class.
-- Teachers teach multiple classes.
-- Classes have one teacher but many students.
+  car_id int // FK pointing to the car
+}
+Ref: accidents.car_id > cars.id
+```
 
-**Discussion Questions:**
-- "What happens if you try to delete a teacher who still has classes assigned?"
-- "Why do we use `teacher_id` in the classes table rather than storing the teacher name directly?"
+</details>
 
-### 💬 Q&A & Reflection (10 min)
+### 🛠️ Activity 2.2: School System Workshop (15 min)
 
-- **Common Misconception:** "I can just store everything in one table to keep it simple." → This leads to update anomalies — change one piece of information and you must update dozens of rows. One misses = data inconsistency.
-- **Business Case:** Every e-commerce platform (Amazon, Shopify) uses this exact PK/FK pattern to link users → orders → order_items → products. A poorly designed schema at launch can cost millions to refactor.
+Construct an ERD for a school system whose classes have students and teachers. Each student belongs to a single class. Each teacher may teach more than one class, and each class may have more than one teacher.
 
----
+Each entity has the following attributes:
 
-## 🏃 Part 3: Organising Data — Normalisation (55 min)
+> - Student: id, name, address, phone, email, class_id
+> - Teacher: id, name, address, phone, email
+> - Class: id, name, teacher_id
 
-### 🎯 Learning Objective
-Evaluate an unnormalised dataset and decompose it step-by-step into 3rd Normal Form (3NF).
-
-### 📖 Theory Recap (10 min)
-
-**Analogy:** Imagine a coffee shop recording orders like this: `"Alice, 123 Main St, Oat Latte £4, Croissant £3.50"` — all in one cell. If Alice moves, you update 47 rows. That's the problem normalisation solves.
-
-**The Three Rules:**
-
-| Normal Form | The Rule | The Fix |
-|-------------|---------|---------|
-| **1NF** | No lists or repeating groups in cells | One value per cell; separate rows for repeating items |
-| **2NF** | Every non-key column depends on the *whole* primary key | Split tables so each piece of data belongs to its natural entity |
-| **3NF** | No transitive dependencies (A → B → C) | If C depends on B and B depends on A, move C to B's table |
-
-**Key insight:** "Every fact should be about the key, the whole key, and nothing but the key."
-
-### 🛠️ Workshop: "E-Commerce Deconstruction" (35 min)
-
-**Start with this unnormalised orders table:**
-
-| OrderID | CustomerName | CustomerEmail | ProductName | ProductCategory | UnitPrice | Qty |
-|---------|-------------|--------------|------------|----------------|-----------|-----|
-| 1 | Alice | alice@x.com | USB Hub | Electronics | 25.00 | 2 |
-| 1 | Alice | alice@x.com | HDMI Cable | Electronics | 12.00 | 1 |
-| 2 | Bob | bob@x.com | USB Hub | Electronics | 25.00 | 1 |
-
-**Step 1 — 1NF:** Already met (one value per cell). Add `order_item_id` as the new composite PK.
-
-**Step 2 — 2NF:** `CustomerName` and `CustomerEmail` depend only on `OrderID`, not on the item. Split:
-- **orders:** `(order_id, customer_id, order_date)`
-- **customers:** `(customer_id, name, email)`
-- **order_items:** `(order_item_id, order_id, product_id, qty)`
-
-**Step 3 — 3NF:** `ProductCategory` depends on `ProductName`, not directly on the order. Split:
-- **products:** `(product_id, product_name, category_id, unit_price)`
-- **categories:** `(category_id, category_name)`
-
-**Discussion:** "Why store `unit_price` in `order_items` instead of just referencing it from `products`?"
-
-*(Answer: Historical accuracy — if the product price changes, past order amounts must remain correct.)*
-
-### 💬 Q&A & Reflection (10 min)
-
-- **Common Misconception:** "More normalisation is always better." → Over-normalisation creates complex JOIN queries that slow down performance. Large-scale analytical databases sometimes deliberately *denormalise* for speed.
-- **Business Case:** Shopify's order database uses a 3NF-compliant schema for transactional integrity, but their analytics warehouse uses a denormalised star schema for fast reporting — two different tools for two different jobs.
+- Write the DBML to create the ERD.
+- Submit your code in the Discord Peer-Review Channel.
 
 ---
 
-## 🎯 Wrap-Up (5 min)
+## 🏃 Part 3: Organizing Your Data — Normalization (50 min)
 
-### Key Takeaways
-1. **Database type selection** is a design decision, not a preference — match the tool to the data shape and query pattern.
-2. **Keys are the skeleton of your database** — every table needs a PK; FKs define relationships.
-3. **Normalisation removes redundancy** — but know when to stop. Production databases often balance between 3NF and performance.
+### 🎯 Learning Objectives
+Evaluate a raw, un-normalized dataset and decompose it into a 3rd Normal Form (3NF) schema to reduce data redundancy.
 
-### Next Steps
-- **Post-Class:** Complete the [FoodFast Database Design Challenge](./assignment.md) — design and export a 7-table schema (45–60 min).
-- **Next Lesson:** Lesson 1.3 is where you start *building* these schemas with real SQL DDL commands.
+### Concept Overview
+
+> **Interactive Tutorial:** Before reading further, try the [Normalization Interactive Visualization](https://su-ntu-ctp.github.io/6m-data-1.2-intro-database/). Open this file in your web browser and follow the 8-step guided tour to see these ideas come to life.
+
+**The Coffee Shop Story:** Every time you buy coffee, the cashier writes your complete home address on each paper slip. If you move, they'd need to update hundreds of receipts. This is an "Update Anomaly" — changing one fact forces updates in many places.
+
+**Normalization** is like organizing your home: instead of keeping your keys in random places, you put them in one designated spot. Similarly, we organize data so each piece of information lives in exactly one place.
+
+**"Every fact should be about the key, the whole key, and nothing but the key."**
+
+---
+
+#### Rule 1 (1NF): One Item Per Space — "No Grocery Bags in Cells"
+
+**The Problem — Before 1NF:**
+
+| Person | Favorite Fruits |
+|--------|-----------------|
+| Sarah | Apple, Banana, Orange |
+| Mike | Grape, Mango |
+
+**The Solution — After 1NF:**
+
+| Person | Favorite Fruit |
+|--------|----------------|
+| Sarah | Apple |
+| Sarah | Banana |
+| Sarah | Orange |
+| Mike | Grape |
+| Mike | Mango |
+
+---
+
+#### Rule 2 (2NF): Everything Relates to the Complete ID — "The Address Book Rule"
+
+**The Problem:** In a library tracking who borrowed which books, Alice's name appears multiple times. If Alice changes her name, you'd have to update multiple rows. Also, "Book Title" depends on "Book ID," not on the specific borrowing transaction.
+
+**The Solution:** Split into three tables — Students, Books, and Borrowing Records. Each piece of information connects to its complete identifier.
+
+---
+
+#### Rule 3 (3NF): No Chain Dependencies — "The Phone Directory Principle"
+
+**The Problem:**
+
+| Employee ID | Employee Name | Department Code | Department Name | Department Manager |
+|-----------|-------------|-----------------|-----------------|-------------------|
+| E001 | Alice | D10 | Sales | John Smith |
+| E002 | Bob | D10 | Sales | John Smith |
+| E003 | Carol | D20 | Marketing | Jane Doe |
+
+**What's wrong?** Department Name and Manager depend on Department Code, not directly on Employee ID. This is a "transitive dependency":
+
+```
+Employee ID → Department Code → Department Name
+Employee ID → Department Code → Department Manager
+```
+
+**The Solution:** Split into Employees and Departments tables. When the Sales manager changes, you update ONE cell.
+
+---
+
+### 🛠️ Activity 3: The E-Commerce Deconstruction (Group Breakout — 20 min)
+
+**Starting Point — The Messy Spreadsheet:**
+
+| OrderID | ItemID | ItemName | ItemPrice | CustomerID | CustomerName | OrderDate |
+|---------|--------|----------|-----------|-----------|-------------|-----------|
+| 100 | 10 | iPhone | 1000 | 1 | John | 2021-01-01 |
+| 100 | 20 | iPad | 500 | 1 | John | 2021-01-01 |
+| 200 | 30 | Macbook | 2000 | 1 | John | 2021-01-02 |
+| 300 | 10 | iPhone | 1000 | 2 | Mary | 2021-01-03 |
+| 300 | 30 | Macbook | 2000 | 2 | Mary | 2021-01-03 |
+
+Work through the normalization steps with your group:
+
+**Step 1 — Apply 1NF:** Add a LineNumber to create a unique two-part identifier (OrderID + LineNumber) for each row.
+
+**Step 2 — Apply 2NF:** Customer info (CustomerID, CustomerName, OrderDate) depends only on OrderID, not on LineNumber. Split into an **Orders Table** and an **Order Line Items Table**.
+
+**Step 3 — Apply 3NF:** ItemName and ItemPrice depend on ItemID, not on the specific order. Create a separate **Products Table**.
+
+**Final Result — 4 clean tables:** Customers, Products, Orders, Order Line Items.
+
+### 🛠️ Activity 3.2: Your Turn to Practice (15 min)
+
+**Scenario:** You run a Movie Rental Service.
+
+**Current Messy Data:**
+
+| RentalID | CustomerName | CustomerPhone | MovieTitle | MovieGenre | RentalDate | ReturnDate |
+|----------|-------------|-------------|-----------|-----------|-----------|-----------|
+| R1 | Alice | 555-1234 | Inception | Sci-Fi | 2026-01-01 | 2026-01-03 |
+| R1 | Alice | 555-1234 | Interstellar | Sci-Fi | 2026-01-01 | 2026-01-03 |
+| R2 | Bob | 555-5678 | Inception | Sci-Fi | 2026-01-02 | 2026-01-04 |
+
+**Task:** Normalize this to 3NF. Create the necessary tables and identify the Primary Keys and Foreign Keys. Write it in DBML and share in Discord.
+
+### 💬 Reflection
+
+- When might a team *intentionally* denormalize (break normalization rules) for performance reasons? What are the trade-offs?
+- How does normalization protect against "Update Anomalies"?
+
+---
+
+## 🎯 Wrap-Up
+
+**Key Takeaways:**
+1. Choose your database type (SQL, NoSQL, Vector) based on the nature of your data and your query patterns.
+2. ERDs are blueprints — design the structure before writing SQL.
+3. Normalization ensures each fact lives in exactly one place, preventing duplicates and update errors.
+
+**Next Steps:**
+- Complete the [Assignment](./assignment.md).
+- Next lesson: Lesson 1.3 introduces SQL DDL — how to physically build the tables you designed today.
