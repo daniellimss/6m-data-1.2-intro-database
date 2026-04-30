@@ -20,11 +20,14 @@ The CEO has given you a messy set of requirements on a napkin. Your job is to tu
 
 ### **The Requirements**
 
-1. **Users:** We have customers who have a Name, Email, and *multiple* saved delivery addresses (Home, Work, etc.).  
-2. **Restaurants:** Establishments have a Name, Cuisine Type, and Rating.  
-3. **The Menu:** Each restaurant has many Menu Items (e.g., "Burger", "Fries"). Items have a Name and a Price.  
-4. **Couriers:** Drivers have a Name and Vehicle Type (Bike, Car).  
-5. **Orders:**  
+1. **Users:** We have customers who have a Name and Email.
+2. **Addresses:** Each User can save multiple delivery addresses 
+     (e.g., Home, Work). Each address has a Street, City, and a 
+     Label/Type. An address belongs to exactly one User. 
+3. **Restaurants:** Establishments have a Name, Cuisine Type, and Rating.  
+4. **The Menu:** Each restaurant has many Menu Items (e.g., "Burger", "Fries"). Items have a Name and a Price.  
+5. **Couriers:** Drivers have a Name and Vehicle Type (Bike, Car).  
+6. **Orders:**  
    * An order belongs to **one** Customer.  
    * An order is picked up by **one** Courier.  
    * An order comes from **one** Restaurant.  
