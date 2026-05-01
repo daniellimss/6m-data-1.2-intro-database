@@ -1,0 +1,8 @@
+Your submission was successful!
+Course: PACE-SCTP-DSAI-FT-250068-PACE-SCTP-DSAI-FT-01, FT Cohort 3: PACE-SCTP-DSAI-FT-01-Foundations of Data Science: Python and SQL
+Assessment: Assessment 1.2
+
+Submission date: 4/29/26, 3:42 PM (UTC+8)
+Submission size: 0 bytes
+Submitter: CET Lim Soon Seng
+Confirmation number: 6d5f0a499d4c47acbfcbdcdfafec2994
